@@ -1,0 +1,12 @@
+# not necessary
+*secrets.yaml
+*.c9*
+*/__pycache__/*
+*.pyc
+*compiled/*
+*logs/*
+*namespaces/*
+
+# not mine to share
+*custom_css/*
+*custom_widgets/*

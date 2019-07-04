@@ -1,0 +1,308 @@
+# global data, use as global_dependencies when needed
+global_modules:
+  - ir_packets_manager
+  - alexa_request
+  - alexa_response_error
+  - alexa_response_error
+  - little_helpers
+
+##############################
+######### API Access #########
+##############################
+smarthome_custom_ac:
+  module: smarthome_custom_ac
+  class: AlexaCustomAC
+  entities:
+    - climate.nursery_ac
+    - climate.bedroom_ac
+    - climate.living_room_ac
+  default_mode_for_on: "cool"
+  scale: "CELSIUS"
+  global_dependencies:
+    - alexa_requests
+    - alexa_response_error
+    - alexa_response_success
+    - little_helpers
+
+####################################
+###### Wallpanels Automations ######
+####################################
+nursery_panel_extract_attributes_for_battery:
+  module: wallpanels_project
+  class: WallPanelsExtractAttributesFromMessage
+  sensor_entity: 'sensor.wallpanel_nursery_battery'
+  sensor_topic: 'wallpanel/nursery_dash/sensor/battery'
+
+#####################################
+###### Notification Automations #####
+#####################################
+nursery_panel_low_battery_notification:
+  module: automations
+  class: BatteryLowSendNotification
+  sensor_entity: 'sensor.wallpanel_nursery_battery'
+  notify_service: 'notify.telegram_tomer_service'
+  threshold_precent: 20
+  device_name: "Nursery Tablet"
+  
+tomer_mi_a2_low_battery_notification:
+  module: automations
+  class: BatteryLowSendNotification
+  sensor_entity: 'sensor.tomer_traccar_battery_sensor'
+  notify_service: 'notify.telegram_tomer_service'
+  threshold_precent: 30
+  device_name: "Tomer's MI A2"
+  
+hava_galaxy_low_battery_notification:
+  module: automations
+  class: BatteryLowSendNotification
+  sensor_entity: 'sensor.hava_traccar_battery_sensor'
+  notify_service: 'notify.telegram_hava_service'
+  threshold_precent: 30
+  device_name: "Hava's Galaxy S9"
+
+###########################################
+######## Door Sensor Automations ##########
+###########################################
+small_bathroom_door_control_switch:
+  module: automations
+  class: SensorsControlSwitches
+  sensor_entity: 'sensor.broadlink_s1c_small_bathroom'
+  switch_entities: 'switch.small_bathroom_light'
+  turn_on_closed_to_open: True
+  turn_off_open_to_closed: False
+  global_dependencies: little_helpers
+  
+main_bathroom_door_control_switch:
+  module: automations
+  class: SensorsControlSwitches
+  sensor_entity: 'sensor.broadlink_s1c_main_bathroom'
+  switch_entities: 'switch.main_bathroom_light'
+  turn_on_closed_to_open: True
+  turn_off_open_to_closed: False
+  global_dependencies: little_helpers
+
+closet_room_door_control_switch:
+  module: automations
+  class: SensorsControlSwitches
+  sensor_entity: 'sensor.broadlink_s1c_closet_room'
+  switch_entities:
+    - 'switch.closet_room_light'
+    - 'switch.shower_light'
+  turn_on_closed_to_open: True
+  turn_off_open_to_closed: False
+  global_dependencies: little_helpers
+  
+service_door_control_switch:
+  module: automations
+  class: SensorsControlSwitches
+  sensor_entity: 'sensor.broadlink_s1c_service_room'
+  switch_entities: 'switch.service_room_light'
+  turn_on_closed_to_open: True
+  turn_off_open_to_closed: True
+  global_dependencies: little_helpers
+
+###########################################
+##### Nursery Ceiling Fan Automations #####
+###########################################
+nursery_ceiling_fan_off:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/nursery/command'
+  payload: 'off'
+  ir_transmitter_ip: "192.168.0.170"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'off'
+  global_dependencies: ir_packets_manager
+  
+nursery_ceiling_fan_on:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/nursery/command'
+  payload: 'on'
+  ir_transmitter_ip: "192.168.0.170"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'low'
+  global_dependencies: ir_packets_manager
+  
+nursery_ceiling_set_speed_low:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/nursery/speed'
+  payload: 'low'
+  ir_transmitter_ip: "192.168.0.170"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'low'
+  global_dependencies: ir_packets_manager
+  
+nursery_ceiling_set_speed_medium:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/nursery/speed'
+  payload: 'medium'
+  ir_transmitter_ip: "192.168.0.170"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'medium'
+  global_dependencies: ir_packets_manager
+  
+nursery_ceiling_set_speed_high:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/nursery/speed'
+  payload: 'high'
+  ir_transmitter_ip: "192.168.0.170"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'high'
+  global_dependencies: ir_packets_manager
+
+###########################################
+##### Office Ceiling Fan Automations ######
+###########################################
+office_ceiling_fan_off:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/office/command'
+  payload: 'off'
+  ir_transmitter_ip: "192.168.0.133"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'off'
+  global_dependencies: ir_packets_manager
+  
+office_ceiling_fan_on:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/office/command'
+  payload: 'on'
+  ir_transmitter_ip: "192.168.0.133"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'low'
+  global_dependencies: ir_packets_manager
+  
+office_ceiling_set_speed_low:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/office/speed'
+  payload: 'low'
+  ir_transmitter_ip: "192.168.0.133"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'low'
+  global_dependencies: ir_packets_manager
+  
+office_ceiling_set_speed_medium:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/office/speed'
+  payload: 'medium'
+  ir_transmitter_ip: "192.168.0.133"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'medium'
+  global_dependencies: ir_packets_manager
+  
+office_ceiling_set_speed_high:
+  module: ir_packets_control
+  class: HandleMqttFan
+  topic: 'tomerfi_custom_fan/office/speed'
+  payload: 'high'
+  ir_transmitter_ip: "192.168.0.133"
+  fan_type: "hyundai_ceiling_fan"
+  command: 'high'
+  global_dependencies: ir_packets_manager
+
+########################################
+######## Nursery AC Automations ########
+########################################
+nursery_ac_automation:
+  module: ir_packets_control
+  class: HandleMqttACUnit
+  climate_entity: climate.nursery_air_conditioner
+  ir_transmitter_ip: "192.168.0.170"
+  ac_type: "elco_small"
+  default_mode_for_on: "cool"
+  mode_command_topic: "tomerfi_custom_ac/nursery/mode"
+  temperature_command_topic: "tomerfi_custom_ac/nursery/temperature"
+  fan_mode_command_topic: "tomerfi_custom_ac/nursery/fan"
+
+nursery_temperature_sensor_to_mqtt:
+  module: ir_packets_control
+  class: TemperatureSensorToMqtt
+  sensor_entity: sensor.nursery_broadlink_a1_temperature
+  topic: "tomerfi_custom_ac/nursery/current_temperature"
+  
+########################################
+######## Bedroom AC Automations ########
+########################################
+bedroom_ac_automation:
+  module: ir_packets_control
+  class: HandleMqttACUnit
+  climate_entity: climate.bedroom_air_conditioner
+  ir_transmitter_ip: "192.168.0.133"
+  ac_type: "elco_small"
+  default_mode_for_on: "cool"
+  mode_command_topic: "tomerfi_custom_ac/bedroom/mode"
+  temperature_command_topic: "tomerfi_custom_ac/bedroom/temperature"
+  fan_mode_command_topic: "tomerfi_custom_ac/bedroom/fan"
+
+bedroom_temperature_sensor_to_mqtt:
+  module: ir_packets_control
+  class: TemperatureSensorToMqtt
+  sensor_entity: sensor.bedroom_temperature
+  topic: "tomerfi_custom_ac/bedroom/current_temperature"
+
+############################################
+######## Living Room AC Automations ########
+############################################
+living_room_ac_automation:
+  module: ir_packets_control
+  class: HandleMqttACUnit
+  climate_entity: climate.living_room_air_conditioner
+  ir_transmitter_ip: "192.168.0.122"
+  ac_type: "electra_classic_35"
+  default_mode_for_on: "cool"
+  mode_command_topic: "tomerfi_custom_ac/living_room/mode"
+  temperature_command_topic: "tomerfi_custom_ac/living_room/temperature"
+  fan_mode_command_topic: "tomerfi_custom_ac/living_room/fan"
+
+living_room_temperature_sensor_to_mqtt:
+  module: ir_packets_control
+  class: TemperatureSensorToMqtt
+  sensor_entity: sensor.living_room_temperature
+  topic: "tomerfi_custom_ac/living_room/current_temperature"
+
+#######################################
+##### OpenMqttGateway Automations #####
+#######################################
+bedroom_sticker_switch_toggle:
+  module: automations
+  class: CallServiceOnMqttMessage
+  topic: 'omg/rfgw_hallway/433toMQTT'
+  payload: '9127250'
+  service: 'switch.toggle'
+  data:
+    entity_id: "switch.bedroom_main_light"
+
+service_room_sticker_switch_toggle:
+  module: automations
+  class: CallServiceOnMqttMessage
+  topic: 'omg/rfgw_hallway/433toMQTT'
+  payload: '99041'
+  service: 'switch.toggle'
+  data:
+    entity_id: "switch.service_room_light"
+        
+kitchen_bar_light_sticker_switch_toggle:
+  module: automations
+  class: CallServiceOnMqttMessage
+  topic: 'omg/rfgw_hallway/433toMQTT'
+  payload: '99044'
+  service: 'switch.toggle'
+  data:
+    entity_id: "switch.kitchen_bar_light"
+        
+door_bell_ring_notification:
+  module: automations
+  class: CallServiceOnMqttMessage
+  topic: 'omg/rfgw_hallway/433toMQTT'
+  payload: '14878223'
+  service: 'notify.everyone'
+  data:
+    title: "Door Bell"
+    message: "The main entrance door bell was activated"

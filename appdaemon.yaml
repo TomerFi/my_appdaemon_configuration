@@ -1,0 +1,35 @@
+log:
+  accessfile: /conf/logs/access.log
+  logfile: /conf/logs/appdaemon.log
+  errorfile: /conf/logs/error.log
+  diagfile: /conf/logs/diag.log
+  log_size: 1024
+  log_generations: 5
+
+appdaemon:
+  threads: 10
+  app_dir: /conf/apps
+  api_port: 5750
+  api_key: !secret appdaemon_api_key
+  plugins:
+    HASS:
+      namespace: default
+      type: hass
+      ha_url: http://has_homeassistant:8123
+      token: !secret appdaemon_ha_access_token
+    MQTT:
+      namespace: mqtt
+      type: mqtt
+      verbose: false
+      client_host: 'infr_mosquitto'
+      client_port: 1883
+      client_id: !secret mosquitto_appdaemon_client_id
+      client_user: !secret mosquitto_appdaemon_user
+      client_password: !secret mosquitto_appdaemon_password
+
+hadashboard:
+  dash_url: !secret appdaemon_dash_url
+  dash_password: !secret appdaemon_dash_password
+  dash_force_compile: 1
+  dash_compile_on_start: 1
+  dashboard_dir: /conf/dashboards
