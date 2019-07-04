@@ -2,7 +2,7 @@
 
 This is my [AppDaemon](https://appdaemon.readthedocs.io/en/latest/index.html) configuration.
 
-You can also check out my [Home Assistant Configuration](https://www.home-assistant.io/).
+You can also check out my [Home Assistant Configuration](https://github.com/TomerFi/my_home_assistant_configuration).
 
 Please note, *AppDaemon* original docker image is not suitable for running on *rpi3b*.
 
