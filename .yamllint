@@ -1,0 +1,12 @@
+extends: default
+
+ignore: |
+  .c9
+  custom_css
+  custom_widgets
+
+rules:
+  line-length:
+    max: 100
+    level: warning
+  document-start: false

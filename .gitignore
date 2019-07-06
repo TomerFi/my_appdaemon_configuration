@@ -1,12 +1,14 @@
 # not necessary
-*secrets.yaml
-*.c9*
+secrets.yaml
+.c9
+.mypy_cache
+.tox
 */__pycache__/*
 *.pyc
-*compiled/*
-*logs/*
-*namespaces/*
+compiled
+logs
+namespaces
 
 # not mine to share
-*custom_css/*
-*custom_widgets/*
+custom_css
+custom_widgets

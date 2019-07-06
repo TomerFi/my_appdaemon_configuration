@@ -1,90 +1,148 @@
+"""Global module for use with AppDaemon, Alexa Error Response Objects.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
+from typing import Dict, Optional, Union
+
 import little_helpers
+from alexa_request import EndpointRequest, GenericRequest
 
-class GenericErrorResponse(object):
-  # object representing the base generic error response, do not use directly!
-  # use any of the subclassess TemperatureOutOfRangeErrorResponse, ThermostatIsOffErrorResponse, InvalidDirectiveErrorResponse,
-  # InvalidValueErrorResponse, BridgeUnreachableErrorResponse, NoSuchEndpointErrorResponse, InternalErrorResponse
-  def __init__(self, request_object, error_type, error_message, namespace='Alexa', **kwargs):
-    self.response_header = {
-      "namespace": namespace,
-      "name": "ErrorResponse",
-      "messageId": little_helpers.get_uuid_str(),
-      "correlationToken": request_object.correlationToken,
-      "payloadVersion": "3"
-    }
-    
-    self.response_endpoint = {
-      "endpointId": request_object.endpointId
-    }
-    
-    self.response_payload = {
-      "type": error_type,
-      "message": error_message
-    }
-    
-    if kwargs is not None:
-      for key, value in kwargs.items():
-        self.response_payload[str(key)] = value
 
-  def create_response(self):
-    return {
-      "event": {
-        "header": self.response_header,
-        "endpoint": self.response_endpoint,
-        "payload": self.response_payload
-      }
-    }
+class GenericErrorResponse:
+    """Object representing the base generic error response.
+
+    Do not use directly,
+    use any of the following subclassess.
+    """
+
+    def __init__(
+        self,
+        request_object: Union[EndpointRequest, GenericRequest],
+        error_type: str,
+        error_message: str,
+        namespace: str = "Alexa",
+        **kwargs: Optional[Dict],
+    ) -> None:
+        """Initialize the object."""
+        self.response_header = {
+            "namespace": namespace,
+            "name": "ErrorResponse",
+            "messageId": little_helpers.get_uuid_str(),
+            "payloadVersion": "3",
+        }
+
+        if isinstance(request_object, EndpointRequest):
+            self.response_header[
+                "correlationToken"
+            ] = request_object.correlationToken
+            self.response_endpoint = {"endpointId": request_object.endpointId}
+        else:
+            self.response_header["correlationToken"] = ""
+            self.response_endpoint = {"endpointId": ""}
+
+        self.response_payload = {"type": error_type, "message": error_message}
+        if kwargs:
+            for key, value in kwargs.items():
+                self.response_payload[str(key)] = str(value)
+
+    def create_response(self) -> Dict:
+        """Return the dict response."""
+        return {
+            "event": {
+                "header": self.response_header,
+                "endpoint": self.response_endpoint,
+                "payload": self.response_payload,
+            }
+        }
 
 
 class TemperatureOutOfRangeErrorResponse(GenericErrorResponse):
-  # object represnting the error response sent back when the requested temperature is out of range
-  def __init__(self, request_object, message, min_value, max_value, scale="CELSIUS"):
-    kwargs = {
-      "validRange": {
-        "minimumValue": {
-          "value": min_value,
-          "scale": scale
-        },
-        "maximumValue": {
-          "value": max_value,
-          "scale": scale
+    """Object represnting the requested temperature is out of range error."""
+
+    def __init__(
+        self,
+        request_object: EndpointRequest,
+        message: str,
+        min_value: Union[str, int],
+        max_value: Union[str, int],
+        scale: str = "CELSIUS",
+    ) -> None:
+        """Initialize the object."""
+        kwargs = {
+            "validRange": {
+                "minimumValue": {"value": min_value, "scale": scale},
+                "maximumValue": {"value": max_value, "scale": scale},
+            }
         }
-      }
-    }
-    super(TemperatureOutOfRangeErrorResponse, self).__init__(request_object, "TEMPERATURE_VALUE_OUT_OF_RANGE", message, "Alexa", **kwargs)
+
+        super(TemperatureOutOfRangeErrorResponse, self).__init__(
+            request_object,
+            "TEMPERATURE_VALUE_OUT_OF_RANGE",
+            message,
+            "Alexa",
+            **kwargs,
+        )
 
 
 class ThermostatIsOffErrorResponse(GenericErrorResponse):
-  # object represnting the error response sent back when the requested thermostat is off and not responding
-  def __init__(self, request_object, message):
-    super(ThermostatIsOffErrorResponse, self).__init__(request_object, 'THERMOSTAT_IS_OFF', message, 'Alexa.ThermostatController')
+    """Object represnting the requested thermostat is off error."""
+
+    def __init__(self, request_object: EndpointRequest, message: str) -> None:
+        """Initialize the object."""
+        super(ThermostatIsOffErrorResponse, self).__init__(
+            request_object,
+            "THERMOSTAT_IS_OFF",
+            message,
+            "Alexa.ThermostatController",
+        )
 
 
 class InvalidDirectiveErrorResponse(GenericErrorResponse):
-  # object represnting the error response sent back when the request's directive is invalid
-  def __init__(self, request_object, message):
-    super(InvalidDirectiveErrorResponse, self).__init__(request_object, 'INVALID_DIRECTIVE', message)
+    """Object represnting the request"s directive is invalid error."""
+
+    def __init__(self, request_object: GenericRequest, message: str) -> None:
+        """Initialize the object."""
+        super(InvalidDirectiveErrorResponse, self).__init__(
+            request_object, "INVALID_DIRECTIVE", message
+        )
 
 
 class InvalidValueErrorResponse(GenericErrorResponse):
-  # object represnting the error response sent back when the requested value is not supported
-  def __init__(self, request_object, message):
-    super(InvalidValueErrorResponse, self).__init__(request_object, 'INVALID_VALUE', message)
+    """Object represnting the requested value is not supported error."""
+
+    def __init__(self, request_object: EndpointRequest, message: str) -> None:
+        """Initialize the object."""
+        super(InvalidValueErrorResponse, self).__init__(
+            request_object, "INVALID_VALUE", message
+        )
 
 
 class BridgeUnreachableErrorResponse(GenericErrorResponse):
-  # object represnting the error response sent back when the destination bridge is unreachable
-  def __init__(self, request_object, message):
-    super(BridgeUnreachableErrorResponse, self).__init__(request_object, 'BRIDGE_UNREACHABLE', message)
+    """Object represnting the destination bridge is unreachable error."""
+
+    def __init__(self, request_object: EndpointRequest, message: str) -> None:
+        """Initialize the object."""
+        super(BridgeUnreachableErrorResponse, self).__init__(
+            request_object, "BRIDGE_UNREACHABLE", message
+        )
 
 
 class NoSuchEndpointErrorResponse(GenericErrorResponse):
-  # object represnting the error response sent back when the requested endpoint doesn't exist
-  def __init__(self, request_object, message):
-    super(NoSuchEndpointErrorResponse, self).__init__(request_object, 'NO_SUCH_ENDPOINT', message)
+    """Object represnting the requested endpoint doesn't exist error."""
+
+    def __init__(self, request_object: EndpointRequest, message: str) -> None:
+        """Initialize the object."""
+        super(NoSuchEndpointErrorResponse, self).__init__(
+            request_object, "NO_SUCH_ENDPOINT", message
+        )
 
 
 class InternalErrorResponse(GenericErrorResponse):
-  # object represnting the error response sent back when the requested endpoint doesn't exist
-  def __init__(self, request_object, message):
-    super(InternalErrorResponse, self).__init__(request_object, 'INTERNAL_ERROR', message)
+    """Object represnting the internal error."""
+
+    def __init__(self, request_object: GenericRequest, message: str) -> None:
+        """Initialize the object."""
+        super(InternalErrorResponse, self).__init__(
+            request_object, "INTERNAL_ERROR", message
+        )

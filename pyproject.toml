@@ -1,0 +1,33 @@
+[tool.black]
+line-length = 79
+target-version = ['py37']
+
+[tool.isort]
+line_length = 79
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = test
+isolated_build = true
+minversion = 3.13.2
+skipdist = true
+
+[testenv:test]
+basepython = python3.7
+skip_install = true
+deps =
+    black==19.3b0
+    flake8==3.7.7
+    isort==4.3.21
+    mypy==0.711
+    toml==0.10.0
+    yamllint==1.16.0
+commands = 
+    yamllint --config-file .yamllint --format colored --strict .
+    flake8 --statistics --count --doctests apps
+    mypy apps
+    isort --diff apps/*.py
+    black --diff apps
+
+"""
