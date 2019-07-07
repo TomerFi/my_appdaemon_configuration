@@ -4,6 +4,7 @@ ignore: |
   .c9
   custom_css
   custom_widgets
+  *site-packages*
 
 rules:
   line-length:
