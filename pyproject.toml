@@ -27,7 +27,7 @@ commands =
     yamllint --config-file .yamllint --format colored --strict .
     flake8 --statistics --count --doctests apps
     mypy apps
-    isort --diff apps/*.py
-    black --diff apps
+    isort --check-only --recursive apps
+    black --check apps
 
 """
