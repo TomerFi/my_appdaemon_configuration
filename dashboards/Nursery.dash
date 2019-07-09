@@ -78,7 +78,7 @@ hue_bloom_temp:
 ac_climate:
   widget_type: climate
   title: "currently"
-  entity: climate.nursery_ac
+  entity: climate.nursery_air_conditioner
   step: 1
   unit: "°C"
   unit2: "°C"
