@@ -1,5 +1,4 @@
 ---
-
 log:
   accessfile: /conf/logs/access.log
   logfile: /conf/logs/appdaemon.log
