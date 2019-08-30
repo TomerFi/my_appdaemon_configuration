@@ -1,3 +1,5 @@
+---
+
 # global data, use as global_dependencies when needed
 global_modules:
   - ir_packets_manager

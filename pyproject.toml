@@ -24,7 +24,7 @@ deps =
     toml==0.10.0
     yamllint==1.17.0
 commands = 
-    yamllint --config-file .yamllint --format colored --strict .
+    yamllint --format colored --strict .
     flake8 --statistics --count --doctests apps
     mypy  --follow-imports silent --ignore-missing-imports apps
     isort --check-only --recursive apps
