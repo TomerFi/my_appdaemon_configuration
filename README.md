@@ -18,7 +18,7 @@ changing the base image to [arm32v7/python:3.6-alpine](https://hub.docker.com/r/
 [5]: https://github.com/TomerFi/my_docker_environment_configuration
 
 <!-- badge links -->
-[maintained]: https://img.shields.io/badge/maintained%3F-yes-green.svg
+[maintained]: https://img.shields.io/maintenance/no/2020
 [appd-version]: https://img.shields.io/badge/version-3.0.5-green.svg
 [appd-environment]: https://img.shields.io/badge/environment-docker-informational.svg
 [hardware]: https://img.shields.io/badge/hardware-rpi3b-important.svg
